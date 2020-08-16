@@ -1,4 +1,4 @@
-git instructins:
+git instructions:
 
    - name: Install Dependencies
       run: |
