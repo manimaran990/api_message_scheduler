@@ -100,6 +100,11 @@ class MsgScheduler(object):
 		#call scheduler
 		self.print_on_time()
 
+		#delete those jobs
+		msg_cnt = len(self.get_all_messages())
+		for i in range(msg_cnt, msg_cnt-5, -1):
+			self.delete_job(f"scheduler{i}")
+
 
 
 
