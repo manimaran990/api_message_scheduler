@@ -61,7 +61,6 @@ class MsgScheduler(object):
 		return data
 
 	def print_on_time(self):
-		
 			self.get_all_messages()
 			job_queue = self.get_message_queue()
 			print("scheduler job started! (ctrl+c to exit)")
@@ -73,12 +72,33 @@ class MsgScheduler(object):
 						job_time = str(job['message']['delivery_time'])
 
 						if re.match(job_time, current_time):
-							print(job['message']['message_content'])
+							msg = job['message']['message_content']
+							print(f"message: {msg} scheduled on {job_time}")
 
 					time.sleep(1)
 
 				except KeyboardInterrupt:
 					break
+
+	def addSecs(self, tm, secs):
+	    fulldate = datetime.datetime(tm.year, tm.month, tm.day, tm.hour, tm.minute, tm.second)
+	    fulldate = fulldate + datetime.timedelta(seconds=secs)
+	    return fulldate.isoformat()
+
+	def load_mock(self):
+		print("adding 5 future jobs in 10 seconds interval:")
+		current_time = datetime.datetime.now()
+		print("current time: "+str(current_time))
+		interval = 10
+		for i in range(0,5):
+			msg = f"this is test data {i}"
+			job_time = self.addSecs(current_time, interval)
+			print(msg+" "+job_time)
+			self.post_new_job(msg, job_time)
+			interval = interval+10
+
+		#call scheduler
+		self.print_on_time()
 
 
 
@@ -94,7 +114,8 @@ if __name__ == '__main__':
 		2. add a new scheduled job
 		3. delete by scheduled id
 		4. run scheduler
-		5. exit
+		5. run scheduler(mock data)
+		6. exit
 
 		enter choice: ''')
 
@@ -134,6 +155,10 @@ if __name__ == '__main__':
 			scheduler.print_on_time()
 
 		elif choice == 5:
+			scheduler.load_mock()
+
+
+		elif choice == 6:
 			break
 
 		else:
